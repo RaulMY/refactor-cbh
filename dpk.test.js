@@ -6,6 +6,14 @@ describe("deterministicPartitionKey", () => {
     const trivialKey = deterministicPartitionKey();
     expect(trivialKey).toBe("0");
   });
+  it("Returns a hash when input with no parition key is given", () => {
+    const event = { somethingElse: 123};
+    const somethingElseKey = deterministicPartitionKey(event);
+    const data = JSON.stringify(event);
+    candidate = crypto.createHash("sha3-512").update(data).digest("hex");
+    expect(typeof somethingElseKey).toBe('string');
+    expect(somethingElseKey).toBe(candidate);
+  });
   it("Returns the partition key if provided in the event", () => {
     const partitionKey = '123';
     const actualKey = deterministicPartitionKey({ partitionKey: partitionKey });
@@ -22,14 +30,6 @@ describe("deterministicPartitionKey", () => {
     expect(objectKey).toBe('{}');
     const randomKey = deterministicPartitionKey({ partitionKey: [21312]});
     expect(typeof randomKey).toBe('string');
-  });
-  it("Returns a hash when input with no parition key is given", () => {
-    const event = { somethingElse: 123};
-    const somethingElseKey = deterministicPartitionKey(event);
-    const data = JSON.stringify(event);
-    candidate = crypto.createHash("sha3-512").update(data).digest("hex");
-    expect(typeof somethingElseKey).toBe('string');
-    expect(somethingElseKey).toBe(candidate);
   });
   it("Returns a max length of 256 when input has a longer partitionKey", () => {
     const longValue = '213901283901283091283912039129239120391290312903219039120391203921039021390213921391203912321890381290382190381293892013821903821903892103812093123123123123213901283901283091283912039129239120391290312903219039120391203921039021390213921391203912321890381290382190381293892013821903821903892103812093123123123123213901283901283091283912039129239120391290312903219039120391203921039021390213921391203912321890381290382190381293892013821903821903892103812093123123123123';
