@@ -10,3 +10,4 @@ You will be graded on the exhaustiveness and quality of your unit tests, the dep
 
 ## Your Explanation Here
 
+The main changes I made were to remove the nested ifs. Those are generally hard to read, and in this particular example they were quite complicated as there were two nested ifs, which made following each variable complicated. What I did was first look at all possible paths the function could take to each individual result, then I created tests for each of those. I then used those tests to refactor the code. What I did was first take care of the early returns, such as a missing event or partitionKey. Then if a key is provided, we use it, stringify it and just check its length. I also added comments for clarity, and moved the constants outside of the function so it's clear those are set values.
